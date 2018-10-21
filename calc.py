@@ -38,13 +38,15 @@ def simulate(interest, principal, payment):
         if amount_left < 0:
             amount_left = 0
 
-        print("At the end of period ", period, 
-              ", total interest paid is $", "%.2f" % round(total_interest, 2), 
-              ", principal paid this period is $", "%.2f" % round(principal_paid, 2),
-              ", principal left is $", "%.2f" % round(amount_left, 2), 
-              sep="")
+        # print("At the end of period ", period, 
+        #       ", total interest paid is $", "%.2f" % round(total_interest, 2), 
+        #       ", principal paid this period is $", "%.2f" % round(principal_paid, 2),
+        #       ", principal left is $", "%.2f" % round(amount_left, 2), 
+        #       sep="")
         period += 1
         # time.sleep(1)
+    period = period / 12 # convert period to years
+    return total_interest, period
 
 if __name__ == "__main__":
     # interest = input("What is the interest rate? ")
@@ -57,8 +59,10 @@ if __name__ == "__main__":
     #     length="30"
     # )
 
-    simulate(
-        interest="4.26",
-        principal="335500",
-        payment="1665"
-    )
+    total_interest, period = simulate(
+                                interest="4.26",
+                                principal="335500",
+                                payment="2500"
+                            )
+    
+    print("Total interest paid: ${:,.2f}\nTotal loan lifetime: {:.2f} yrs".format(total_interest, period))
