@@ -1,5 +1,6 @@
 import math
 import time
+import csv
 
 # def get_monthly_payments(interest, principal, nperiod):
 #     # monthly repayment = (P*r*(1+r)^n)/((1+r)^n-1)
@@ -45,24 +46,67 @@ def simulate(interest, principal, payment):
         #       sep="")
         period += 1
         # time.sleep(1)
-    period = period / 12 # convert period to years
-    return total_interest, period
+    duration = to_years_and_month(period)
+    return total_interest, duration
+
+def to_years_and_month(num_months):
+    years = int(num_months / 12)
+    months = (num_months / 12 - years) * 12
+    return years, months
+
+def print_result(results):
+    for result in results:
+        print("------------------------------------")
+        print("Principal amount: ${:,}".format(int(result[2])))
+        print("Interest rate: {:.2f}%".format(float(result[3])))
+        print("Monthly repayment: ${:,}".format(int(result[4])))
+        print("Total interest paid: ${:,.2f}".format(result[0]))
+        print("Total loan lifetime: {} yrs and {} months".format(result[1][0],int(result[1][1])))
+        print("------------------------------------")
+
+
+def process_input(input_file):
+    results = []
+    with open(file=input_file, newline='') as csvfile:
+        reader = csv.reader(csvfile)
+        for idx, record in enumerate(reader):
+            if idx == 0: continue
+            if len(record) != 3: 
+                raise Exception("Invalid number of elements in input")
+            for element in record: 
+                try:
+                    float(element)
+                except ValueError:
+                    print("{} on row {} is not a number".format(element, idx))
+
+            principal, interest, payment = record
+            total_interest, duration = simulate(interest=interest, 
+                                              principal=principal, 
+                                              payment=payment)
+            results.append((total_interest, duration, principal, interest, payment))
+
+    print_result(results)
+
+
+
 
 if __name__ == "__main__":
-    # interest = input("What is the interest rate? ")
-    # principal = input("What is the principal? ")
-    # length = input("How many years is the loan? ")
 
-    # calc(
-    #     interest="4.26",
-    #     principal="335500",
-    #     length="30"
-    # )
+    input_file = "input.csv"
+    process_input(input_file=input_file)
 
-    total_interest, period = simulate(
-                                interest="4.26",
-                                principal="335500",
-                                payment="2500"
-                            )
-    
-    print("Total interest paid: ${:,.2f}\nTotal loan lifetime: {:.2f} yrs".format(total_interest, period))
+    # interest = "4.26"
+    # principal = "335500"
+    # payment = "2500"
+
+    # total_interest, period = simulate(
+    #                             interest=interest,
+    #                             principal=principal,
+    #                             payment=payment
+    #                         )
+
+    # print("Principal amount: ${:,}".format(int(principal)))
+    # print("Interest rate: {:.2f}%".format(float(interest)))
+    # print("Monthly repayment: ${:,}".format(int(payment)))
+    # print("Total interest paid: ${:,.2f}".format(total_interest))
+    # print("Total loan lifetime: {:.2f} yrs".format(period))
