@@ -1,5 +1,5 @@
-principal,interest,payment
-550000,4.32,2750
-550000,3.99,2750
-550000,3.84,2750
-550000,3.84,3500
+principal,interest,payment,fee,fee_period
+550000,4.32,2750,0,yearly
+550000,3.99,2750,248,yearly
+550000,3.84,2750,248,yearly
+550000,3.84,3500,248,yearly
